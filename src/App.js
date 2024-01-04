@@ -1,13 +1,16 @@
-import React, { Component } from 'react';
+import React, { Component, lazy, Suspense } from 'react';
 import './App.css';
 
 
 import Page1 from './Components/Page1';
 // Part 1 - No Code Splitting
-import Page2 from './Components/Page2';
-import Page3 from './Components/Page3';
+// import Page2 from './Components/Page2';
+// import Page3 from './Components/Page3';
 // Part 3 - Cleaner Code Splitting
 // import AsyncComponent from './AsyncComponent';
+
+const Page2 = lazy(() => import('./Components/Page2'));
+const Page3 = lazy(() => import('./Components/Page3'));
 
 class App extends Component {
   constructor() {
@@ -44,13 +47,13 @@ class App extends Component {
   
   render() {
     // Part 1 - No code splitting
-    if (this.state.route === 'page1') {
-      return <Page1 onRouteChange={this.onRouteChange} />
-    } else if (this.state.route === 'page2') {
-      return <Page2 onRouteChange={this.onRouteChange} />
-    } else {
-      return <Page3 onRouteChange={this.onRouteChange} />
-    }
+    // if (this.state.route === 'page1') {
+    //   return <Page1 onRouteChange={this.onRouteChange} />
+    // } else if (this.state.route === 'page2') {
+    //   return <Page2 onRouteChange={this.onRouteChange} />
+    // } else {
+    //   return <Page3 onRouteChange={this.onRouteChange} />
+    // }
 
     // Part 2 - No Code Splitting - manual
     // if (this.state.route === 'page1') {
@@ -69,6 +72,15 @@ class App extends Component {
     //   const AsyncPage3 = AsyncComponent(() => import("./Components/Page3"));
     //   return <AsyncPage3 onRouteChange={this.onRouteChange} />
     // }
+
+    // Part 4 - React Lazy
+    if (this.state.route === 'page1') {
+      return <Page1 onRouteChange={this.onRouteChange} />
+    } else if (this.state.route === 'page2') {
+      return <Suspense fallback={<div>Loading...</div>}><Page2 onRouteChange={this.onRouteChange} /></Suspense>
+    } else {
+      return <Suspense fallback={<div>Loading...</div>}><Page3 onRouteChange={this.onRouteChange} /></Suspense>
+    }
 
   }
 }
